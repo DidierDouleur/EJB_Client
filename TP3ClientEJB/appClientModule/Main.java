@@ -37,11 +37,10 @@ public class Main implements MessageListener {
 	private static Main instance;
 
 	private int id = 0;
-	
+
 	private int myId = -1;
 
 	private static Fenetre fenetre;
-	
 
 	// private static TopicSession topicSession;
 
@@ -65,7 +64,7 @@ public class Main implements MessageListener {
 			MIRemote remoteMi = lookup();
 			instance.subscribeTopic();
 			remoteMi.subscribe("2");
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -153,7 +152,7 @@ public class Main implements MessageListener {
 
 	@Override
 	public void onMessage(Message message) {
-		//TODO
+		// TODO
 		System.out.println("Début onMessage()");
 		// System.out.println(arg0.toString());
 		// TODO Auto-generated method stub
@@ -161,7 +160,7 @@ public class Main implements MessageListener {
 			System.out.println("Message type : " + message.getJMSType());
 
 			switch (message.getJMSType()) {
-			
+
 			case "map":
 				System.out.println("Début onMessage(MAP)");
 				int mapLength = ((StreamMessage) message).readInt();
@@ -174,8 +173,8 @@ public class Main implements MessageListener {
 				fenetre.creationCarte(map);
 				fenetre.repaint();
 				break;
-				
-			case "Pirate" :
+
+			case "Pirate":
 				System.out.println("Début onMessage(Pirate)");
 				int id1 = message.getIntProperty("id");
 				int x1 = message.getIntProperty("x");
@@ -184,35 +183,34 @@ public class Main implements MessageListener {
 				String path = "img/Autres_Pirates.jpg";
 
 				fenetre.ajoutPirate(id1, x1, y1, path, energyLevel);
-			
 
 				fenetre.repaint();
 				break;
-				
-			case "YourPirate" :
+
+			case "YourPirate":
 				System.out.println("Début onMessage(Pirate)");
 				int id42 = message.getIntProperty("id");
-				myId = id42;
+				String path42 = "img/Autres_Pirates.jpg";
+				if (myId == -1) {
+					myId = id42;
+					path42 = "img/Mon_Pirate.png";
+				}
 				int x42 = message.getIntProperty("x");
 				int y42 = message.getIntProperty("y");
 				int energyLevel42 = message.getIntProperty("energy");
-				String path42 = "img/Mon_Pirate.png";
 
 				fenetre.ajoutPirate(id42, x42, y42, path42, energyLevel42);
-			
-
 				fenetre.repaint();
 				break;
-				
-			
-			case "DeathPirate" :
+
+			case "DeathPirate":
 				System.out.println("Début onMessage(DeathPirate)");
 				int id2 = message.getIntProperty("id");
 				fenetre.mortPirate(id2);
 				fenetre.repaint();
 				break;
-				
-			case "Singe" :
+
+			case "Singe":
 				System.out.println("Début onMessage(Singe)");
 				int id3 = message.getIntProperty("id");
 				int x3 = message.getIntProperty("x");
@@ -220,122 +218,121 @@ public class Main implements MessageListener {
 				fenetre.creationEMonkey(id, x3, y3);
 				fenetre.repaint();
 				break;
-				
-			case "Rhum" :
+
+			case "Rhum":
 				System.out.println("Début onMessage(Rhum)");
 				int x4 = message.getIntProperty("x");
 				int y4 = message.getIntProperty("y");
 				fenetre.creationRhum(x4, y4, true);
 				fenetre.repaint();
 				break;
-				
-			case "SuppressionPirate" :
+
+			case "SuppressionPirate":
 				System.out.println("Début onMessage(SuppressionPirate)");
 				int id5 = message.getIntProperty("id");
 				fenetre.suppressionPirate(id5);
 				fenetre.repaint();
 				break;
-				
-			case "SuppressionPirates" :
-				//TODO: remplir => avancer dans un tableau d'ID7
+
+			case "SuppressionPirates":
+				// TODO: remplir => avancer dans un tableau d'ID7
 				System.out.println("Début onMessage(SuppressionPirateSSS)");
 				break;
-				
-			case "Tresor" :
+
+			case "Tresor":
 				System.out.println("Début onMessage(Tresor)");
 				int x5 = message.getIntProperty("x");
 				int y5 = message.getIntProperty("y");
-				System.out.println("valeur"+x5+ "valuer2 "+y5);
+				System.out.println("valeur" + x5 + "valuer2 " + y5);
 				fenetre.creationTresor(x5, y5, true);
 				fenetre.repaint();
 				break;
-				
-			default :
+
+			default:
 				System.out.println("Message reçu non compris : " + message.getJMSType());
 				break;
-				
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-			
-			
-			
-			
-////			MAP
-//			if (message.getJMSType().equals("map")) {
-//				System.out.println("Début onMessage(MAP)");
-//				int mapLength = ((StreamMessage) message).readInt();
-//				int[][] map = new int[mapLength][mapLength];
-//				for (int i = 0; i < mapLength; i++) {
-//					for (int j = 0; j < mapLength; j++) {
-//						map[i][j] = ((StreamMessage) message).readInt();
-//					}
-//				}
-//				fenetre.creationCarte(map);
-//				fenetre.repaint();
-//				
-//				
-////				PIRATE
-//			} else if (message.getJMSType().equals("Pirate")) {
-//				System.out.println("Début onMessage(Pirate)");
-//				int id = message.getIntProperty("id");
-//				int x = message.getIntProperty("x");
-//				int y = message.getIntProperty("y");
-//				int energyLevel = message.getIntProperty("energy");
-//				String path = "img/Autres_Pirates.jpg";
-//
-//				fenetre.ajoutPirate(id, x, y, path, energyLevel);
-//
-//				fenetre.repaint();
-//			}
-//			//DEATHPIRATE
-//			else if (message.getJMSType().equals("DeathPirate")) {
-//				System.out.println("Début onMessage(DeathPirate)");
-//				int id = message.getIntProperty("id");
-//				fenetre.mortPirate(id);
-//				fenetre.repaint();
-//			}
-////			SINGE
-//			else if (message.getJMSType().equals("Singe")) {
-//				System.out.println("Début onMessage(Singe)");
-//				int id = message.getIntProperty("id");
-//				int x = message.getIntProperty("x");
-//				int y = message.getIntProperty("y");
-//				fenetre.creationEMonkey(id, x, y);
-//				fenetre.repaint();
-//			}
-////			RHUM
-//			else if (message.getJMSType().equals("Rhum")) {
-//				System.out.println("Début onMessage(Rhum)");
-//				System.out.println(message.getIntProperty("x"));
-//				int x = message.getIntProperty("x");
-//				System.out.println(message.getIntProperty("y"));
-//				int y = message.getIntProperty("y");
-//				fenetre.creationRhum(x, y, true);
-//				fenetre.repaint();
-//			}
-////			SUPPRESSION PIRATE
-//			else if (message.getJMSType().equals("SuppressionPirate")) {
-//				System.out.println("Début onMessage(SuppressionPirate)");
-//				int id = message.getIntProperty("id");
-//				fenetre.suppressionPirate(id);
-//				fenetre.repaint();
-//			}
-//			//SUPPRESSION PIRATES
-//			else if (message.getJMSType().equals("SuppressionPirates")) {
-//				//TODO: remplir => avancer dans un tableau d'ID
-//			}
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//	}
+
+	//// MAP
+	// if (message.getJMSType().equals("map")) {
+	// System.out.println("Début onMessage(MAP)");
+	// int mapLength = ((StreamMessage) message).readInt();
+	// int[][] map = new int[mapLength][mapLength];
+	// for (int i = 0; i < mapLength; i++) {
+	// for (int j = 0; j < mapLength; j++) {
+	// map[i][j] = ((StreamMessage) message).readInt();
+	// }
+	// }
+	// fenetre.creationCarte(map);
+	// fenetre.repaint();
+	//
+	//
+	//// PIRATE
+	// } else if (message.getJMSType().equals("Pirate")) {
+	// System.out.println("Début onMessage(Pirate)");
+	// int id = message.getIntProperty("id");
+	// int x = message.getIntProperty("x");
+	// int y = message.getIntProperty("y");
+	// int energyLevel = message.getIntProperty("energy");
+	// String path = "img/Autres_Pirates.jpg";
+	//
+	// fenetre.ajoutPirate(id, x, y, path, energyLevel);
+	//
+	// fenetre.repaint();
+	// }
+	// //DEATHPIRATE
+	// else if (message.getJMSType().equals("DeathPirate")) {
+	// System.out.println("Début onMessage(DeathPirate)");
+	// int id = message.getIntProperty("id");
+	// fenetre.mortPirate(id);
+	// fenetre.repaint();
+	// }
+	//// SINGE
+	// else if (message.getJMSType().equals("Singe")) {
+	// System.out.println("Début onMessage(Singe)");
+	// int id = message.getIntProperty("id");
+	// int x = message.getIntProperty("x");
+	// int y = message.getIntProperty("y");
+	// fenetre.creationEMonkey(id, x, y);
+	// fenetre.repaint();
+	// }
+	//// RHUM
+	// else if (message.getJMSType().equals("Rhum")) {
+	// System.out.println("Début onMessage(Rhum)");
+	// System.out.println(message.getIntProperty("x"));
+	// int x = message.getIntProperty("x");
+	// System.out.println(message.getIntProperty("y"));
+	// int y = message.getIntProperty("y");
+	// fenetre.creationRhum(x, y, true);
+	// fenetre.repaint();
+	// }
+	//// SUPPRESSION PIRATE
+	// else if (message.getJMSType().equals("SuppressionPirate")) {
+	// System.out.println("Début onMessage(SuppressionPirate)");
+	// int id = message.getIntProperty("id");
+	// fenetre.suppressionPirate(id);
+	// fenetre.repaint();
+	// }
+	// //SUPPRESSION PIRATES
+	// else if (message.getJMSType().equals("SuppressionPirates")) {
+	// //TODO: remplir => avancer dans un tableau d'ID
+	// }
+	//
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// }
 
 	public static void notifyDisconnect() {
 		System.out.println("NotifyDisconnect");
+		// TODO envoyer un message au serveur avec notre identifiant de pirate (afin que
+		// le serveur le supprime de la partie)
 		try {
 		} catch (Exception e) {
 			e.printStackTrace();
