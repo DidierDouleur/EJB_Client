@@ -37,6 +37,8 @@ public class Main implements MessageListener {
 	private static Main instance;
 
 	private int id = 0;
+	
+	private int myId = -1;
 
 	private static Fenetre fenetre;
 	
@@ -186,6 +188,22 @@ public class Main implements MessageListener {
 
 				fenetre.repaint();
 				break;
+				
+			case "YourPirate" :
+				System.out.println("Début onMessage(Pirate)");
+				int id42 = message.getIntProperty("id");
+				myId = id42;
+				int x42 = message.getIntProperty("x");
+				int y42 = message.getIntProperty("y");
+				int energyLevel42 = message.getIntProperty("energy");
+				String path42 = "img/Mon_Pirate.png";
+
+				fenetre.ajoutPirate(id42, x42, y42, path42, energyLevel42);
+			
+
+				fenetre.repaint();
+				break;
+				
 			
 			case "DeathPirate" :
 				System.out.println("Début onMessage(DeathPirate)");
