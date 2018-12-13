@@ -74,7 +74,7 @@ public class Main implements MessageListener {
 			
 			
 			//Exemple de déplacement
-			remoteMi.move(8, 8, myId);
+//			remoteMi.move(8, 8, myId);
 
 		} catch (Exception e) {
 			e.printStackTrace();
