@@ -1,4 +1,5 @@
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -38,9 +39,11 @@ public class Main implements MessageListener {
 
 	private int id = 0;
 
-	private int myId = -1;
+	private static int myId = -1;
 
 	private static Fenetre fenetre;
+	
+	private static MIRemote remoteMi;
 
 	// private static TopicSession topicSession;
 
@@ -60,10 +63,18 @@ public class Main implements MessageListener {
 					notifyDisconnect();
 				}
 			});
+			
+			//TODO ajouter evenement sur appuit touche
+			
 
-			MIRemote remoteMi = lookup();
+//			MIRemote remoteMi = lookup();
+			remoteMi = lookup();
 			instance.subscribeTopic();
 			remoteMi.subscribe("2");
+			
+			
+			//Exemple de déplacement
+			remoteMi.move(8, 8, myId);
 
 		} catch (Exception e) {
 			e.printStackTrace();
