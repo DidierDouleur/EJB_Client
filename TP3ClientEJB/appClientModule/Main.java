@@ -42,7 +42,7 @@ public class Main implements MessageListener {
 	private static int myId = -1;
 
 	private static Fenetre fenetre;
-	
+
 	private static MIRemote remoteMi;
 
 	// private static TopicSession topicSession;
@@ -63,18 +63,16 @@ public class Main implements MessageListener {
 					notifyDisconnect();
 				}
 			});
-			
-			//TODO ajouter evenement sur appuit touche
-			
 
-//			MIRemote remoteMi = lookup();
+			// TODO ajouter evenement sur appuit touche
+
+			// MIRemote remoteMi = lookup();
 			remoteMi = lookup();
 			instance.subscribeTopic();
 			remoteMi.subscribe("2");
-			
-			
-			//Exemple de déplacement
-//			remoteMi.move(8, 8, myId);
+
+			// Exemple de déplacement
+			// remoteMi.move(8, 8, myId);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -259,11 +257,39 @@ public class Main implements MessageListener {
 				fenetre.repaint();
 				break;
 
+			case "AllElements":
+				
+				System.out.println("myID" + myId);
+				System.out.println("Début onMessage(AllElements)");
+				int size = message.getIntProperty("size");
+				System.out.println("GOOOOOOOOOOO size = " + size);
+				for (int i = 0; i < size; i++) {
+					
+					int id = message.getIntProperty("id" + i);
+					System.out.println("GOOOOOOOOOOO i = " + i + " et ID=" + id);
+					int x = message.getIntProperty("x" + 1);
+					int y = message.getIntProperty("y" + 1);
+					if (id == myId) {
+						// TODO modifier energy pirate !!!
+						// TODO modifier chemin d'accès image par une variable/constante
+						fenetre.ajoutPirate(id, x, y, "img/Mon_Pirate.png", 25);
+					} else if (id > 0 && id < 100 && id!=myId) {
+						fenetre.ajoutPirate(id, x, y, "img/Autres_Pirates.jpg", 25);
+					} else if (id > 100 && id < 200) {
+						fenetre.creationEMonkey(id, x, y);
+					} else if (id > 200 && id < 300) {
+						fenetre.creationRhum(x, y, true);
+					}
+				}
+
+				break;
+
 			default:
 				System.out.println("Message reçu non compris : " + message.getJMSType());
 				break;
 
 			}
+			fenetre.repaint();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
