@@ -26,6 +26,7 @@ import org.jboss.ejb.client.PropertiesBasedEJBClientConfiguration;
 import org.jboss.ejb.client.remoting.ConfigBasedEJBClientContextSelector;
 
 import guybrush.view.Fenetre;
+import guybrush.view.GameObserver;
 import io.netty.util.internal.SystemPropertyUtil;
 import monkeys.MIRemote;
 
@@ -33,7 +34,7 @@ import guybrush.*;
 
 ////ARRET ALAPAGE 4 DU TP 4
 
-public class Main implements MessageListener {
+public class Main implements MessageListener, GameObserver {
 
 	private static Main instance;
 
@@ -55,15 +56,16 @@ public class Main implements MessageListener {
 			fenetre.setBounds(new Rectangle(200, 100));
 			fenetre.setVisible(true);
 			fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+			fenetre.addObserver(instance);
 			// TEST FERMETURE FENETRE
+			
 			fenetre.addWindowListener(new WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent e) {
-					notifyDisconnect();
+					instance.notifyDisconnect();
 				}
 			});
-
+			
 			// TODO ajouter evenement sur appuit touche
 
 			// MIRemote remoteMi = lookup();
@@ -183,32 +185,24 @@ public class Main implements MessageListener {
 				fenetre.repaint();
 				break;
 
-			case "Pirate":
-				System.out.println("Début onMessage(Pirate)");
+			case "YourID":
+				System.out.println("Début onMessage(YOURID)");
 				int id1 = message.getIntProperty("id");
-				int x1 = message.getIntProperty("x");
-				int y1 = message.getIntProperty("y");
-				int energyLevel = message.getIntProperty("energy");
-				String path = "img/Autres_Pirates.jpg";
-
-				fenetre.ajoutPirate(id1, x1, y1, path, energyLevel);
-
-				fenetre.repaint();
+				if(myId == -1) {
+					myId = id1;
+				}
 				break;
 
 			case "YourPirate":
-				System.out.println("Début onMessage(Pirate)");
 				int id42 = message.getIntProperty("id");
-				String path42 = "img/Autres_Pirates.jpg";
 				if (myId == -1) {
 					myId = id42;
-					path42 = "img/Mon_Pirate.png";
 				}
 				int x42 = message.getIntProperty("x");
 				int y42 = message.getIntProperty("y");
 				int energyLevel42 = message.getIntProperty("energy");
 
-				fenetre.ajoutPirate(id42, x42, y42, path42, energyLevel42);
+				fenetre.ajoutPirate(id42, x42, y42, "img/Mon_Pirate.png", energyLevel42);
 				fenetre.repaint();
 				break;
 
@@ -258,22 +252,23 @@ public class Main implements MessageListener {
 				break;
 
 			case "AllElements":
-				
-				System.out.println("myID" + myId);
-				System.out.println("Début onMessage(AllElements)");
+			
 				int size = message.getIntProperty("size");
-				System.out.println("GOOOOOOOOOOO size = " + size);
+				fenetre.removeEMonkeys();
+				fenetre.removeRhums();
 				for (int i = 0; i < size; i++) {
 					
 					int id = message.getIntProperty("id" + i);
 					System.out.println("GOOOOOOOOOOO i = " + i + " et ID=" + id);
-					int x = message.getIntProperty("x" + 1);
-					int y = message.getIntProperty("y" + 1);
+					int x = message.getIntProperty("x" + i);
+					int y = message.getIntProperty("y" + i);
 					if (id == myId) {
 						// TODO modifier energy pirate !!!
 						// TODO modifier chemin d'accès image par une variable/constante
+						fenetre.suppressionPirate(id);
 						fenetre.ajoutPirate(id, x, y, "img/Mon_Pirate.png", 25);
 					} else if (id > 0 && id < 100 && id!=myId) {
+						fenetre.suppressionPirate(id);
 						fenetre.ajoutPirate(id, x, y, "img/Autres_Pirates.jpg", 25);
 					} else if (id > 100 && id < 200) {
 						fenetre.creationEMonkey(id, x, y);
@@ -366,14 +361,22 @@ public class Main implements MessageListener {
 	//
 	// }
 
-	public static void notifyDisconnect() {
+	@Override
+	public void notifyDisconnect() {
 		System.out.println("NotifyDisconnect");
 		// TODO envoyer un message au serveur avec notre identifiant de pirate (afin que
 		// le serveur le supprime de la partie)
+		this.remoteMi.disconnect(String.valueOf(myId));
 		try {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void notifyMove(int arg0, int arg1) {
+		System.out.println();
+		this.remoteMi.move(arg0, arg1, this.myId);		
 	}
 
 }
