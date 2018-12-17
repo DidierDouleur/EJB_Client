@@ -262,19 +262,42 @@ public class Main implements MessageListener, GameObserver {
 					System.out.println("GOOOOOOOOOOO i = " + i + " et ID=" + id);
 					int x = message.getIntProperty("x" + i);
 					int y = message.getIntProperty("y" + i);
-					if (id == myId) {
-						// TODO modifier energy pirate !!!
-						// TODO modifier chemin d'accès image par une variable/constante
+					int energy = message.getIntProperty("energy" + i);
+					String type = message.getStringProperty("type"+i);
+					switch(type) {
+					case "PIRATE":
 						fenetre.suppressionPirate(id);
-						fenetre.ajoutPirate(id, x, y, "img/Mon_Pirate.png", 25);
-					} else if (id > 0 && id < 100 && id!=myId) {
-						fenetre.suppressionPirate(id);
-						fenetre.ajoutPirate(id, x, y, "img/Autres_Pirates.jpg", 25);
-					} else if (id > 100 && id < 200) {
+						if(id == myId) {
+							fenetre.ajoutPirate(id, x, y, "img/Mon_Pirate.png", energy);
+						}else {
+							fenetre.ajoutPirate(id, x, y, "img/Autres_Pirates.jpg", energy);
+						}
+						break;
+					case "MONKEY" :
 						fenetre.creationEMonkey(id, x, y);
-					} else if (id > 200 && id < 300) {
+						break;
+					case "RHUM" :
 						fenetre.creationRhum(x, y, true);
+					
+					default :
+						System.out.println("Type inconnu");
 					}
+					
+					
+					
+//					if (id == myId) {
+//						// TODO modifier energy pirate !!!
+//						// TODO modifier chemin d'accès image par une variable/constante
+//						fenetre.suppressionPirate(id);
+//						fenetre.ajoutPirate(id, x, y, "img/Mon_Pirate.png", 25);
+//					} else if (id > 0 && id < 100 && id!=myId) {
+//						fenetre.suppressionPirate(id);
+//						fenetre.ajoutPirate(id, x, y, "img/Autres_Pirates.jpg", 25);
+//					} else if (id > 100 && id < 200) {
+//						fenetre.creationEMonkey(id, x, y);
+//					} else if (id > 200 && id < 300) {
+//						fenetre.creationRhum(x, y, true);
+//					}
 				}
 
 				break;
