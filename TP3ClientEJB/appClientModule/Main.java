@@ -91,10 +91,6 @@ public class Main implements MessageListener, GameObserver {
 		super();
 	}
 
-	// public void main() {
-	// this.instance = new Main();
-	// this.id = hashCode();
-	// }
 
 	private static MIRemote lookup() throws Exception {
 		Properties properties = new Properties();
@@ -105,7 +101,10 @@ public class Main implements MessageListener, GameObserver {
 		properties.setProperty("remote.connections", "default");
 		properties.setProperty("remote.connection.default.host", "localhost");
 		properties.setProperty("remote.connection.default.port", "8080");
+		
+		//ID CONNECTION SERVER
 		properties.setProperty("remote.connection.default.username", "appManager");
+		//MDP CONNECTION SERVER
 		properties.setProperty("remote.connection.default.password", "Archos");
 
 		// Créer une conf client a partir des propriétées précédemment remplies
@@ -237,17 +236,12 @@ public class Main implements MessageListener, GameObserver {
 				fenetre.repaint();
 				break;
 
-			case "SuppressionPirates":
-				// TODO: remplir => avancer dans un tableau d'ID7
-				System.out.println("Début onMessage(SuppressionPirateSSS)");
-				break;
-
 			case "Tresor":
 				System.out.println("Début onMessage(Tresor)");
 				int x5 = message.getIntProperty("x");
 				int y5 = message.getIntProperty("y");
 				System.out.println("valeur" + x5 + "valuer2 " + y5);
-				fenetre.creationTresor(x5, y5, true);
+				fenetre.creationTresor(x5, y5, false);
 				fenetre.repaint();
 				break;
 
@@ -264,6 +258,7 @@ public class Main implements MessageListener, GameObserver {
 					int y = message.getIntProperty("y" + i);
 					int energy = message.getIntProperty("energy" + i);
 					String type = message.getStringProperty("type"+i);
+					boolean state = message.getBooleanProperty("state"+i);
 					switch(type) {
 					case "PIRATE":
 						fenetre.suppressionPirate(id);
@@ -272,32 +267,19 @@ public class Main implements MessageListener, GameObserver {
 						}else {
 							fenetre.ajoutPirate(id, x, y, "img/Autres_Pirates.jpg", energy);
 						}
+						if(!state) {
+							fenetre.mortPirate(id);
+						}
 						break;
 					case "MONKEY" :
 						fenetre.creationEMonkey(id, x, y);
 						break;
 					case "RHUM" :
-						fenetre.creationRhum(x, y, true);
+						fenetre.creationRhum(x, y, state);
 					
 					default :
 						System.out.println("Type inconnu");
 					}
-					
-					
-					
-//					if (id == myId) {
-//						// TODO modifier energy pirate !!!
-//						// TODO modifier chemin d'accès image par une variable/constante
-//						fenetre.suppressionPirate(id);
-//						fenetre.ajoutPirate(id, x, y, "img/Mon_Pirate.png", 25);
-//					} else if (id > 0 && id < 100 && id!=myId) {
-//						fenetre.suppressionPirate(id);
-//						fenetre.ajoutPirate(id, x, y, "img/Autres_Pirates.jpg", 25);
-//					} else if (id > 100 && id < 200) {
-//						fenetre.creationEMonkey(id, x, y);
-//					} else if (id > 200 && id < 300) {
-//						fenetre.creationRhum(x, y, true);
-//					}
 				}
 
 				break;
@@ -313,76 +295,6 @@ public class Main implements MessageListener, GameObserver {
 		}
 	}
 
-	//// MAP
-	// if (message.getJMSType().equals("map")) {
-	// System.out.println("Début onMessage(MAP)");
-	// int mapLength = ((StreamMessage) message).readInt();
-	// int[][] map = new int[mapLength][mapLength];
-	// for (int i = 0; i < mapLength; i++) {
-	// for (int j = 0; j < mapLength; j++) {
-	// map[i][j] = ((StreamMessage) message).readInt();
-	// }
-	// }
-	// fenetre.creationCarte(map);
-	// fenetre.repaint();
-	//
-	//
-	//// PIRATE
-	// } else if (message.getJMSType().equals("Pirate")) {
-	// System.out.println("Début onMessage(Pirate)");
-	// int id = message.getIntProperty("id");
-	// int x = message.getIntProperty("x");
-	// int y = message.getIntProperty("y");
-	// int energyLevel = message.getIntProperty("energy");
-	// String path = "img/Autres_Pirates.jpg";
-	//
-	// fenetre.ajoutPirate(id, x, y, path, energyLevel);
-	//
-	// fenetre.repaint();
-	// }
-	// //DEATHPIRATE
-	// else if (message.getJMSType().equals("DeathPirate")) {
-	// System.out.println("Début onMessage(DeathPirate)");
-	// int id = message.getIntProperty("id");
-	// fenetre.mortPirate(id);
-	// fenetre.repaint();
-	// }
-	//// SINGE
-	// else if (message.getJMSType().equals("Singe")) {
-	// System.out.println("Début onMessage(Singe)");
-	// int id = message.getIntProperty("id");
-	// int x = message.getIntProperty("x");
-	// int y = message.getIntProperty("y");
-	// fenetre.creationEMonkey(id, x, y);
-	// fenetre.repaint();
-	// }
-	//// RHUM
-	// else if (message.getJMSType().equals("Rhum")) {
-	// System.out.println("Début onMessage(Rhum)");
-	// System.out.println(message.getIntProperty("x"));
-	// int x = message.getIntProperty("x");
-	// System.out.println(message.getIntProperty("y"));
-	// int y = message.getIntProperty("y");
-	// fenetre.creationRhum(x, y, true);
-	// fenetre.repaint();
-	// }
-	//// SUPPRESSION PIRATE
-	// else if (message.getJMSType().equals("SuppressionPirate")) {
-	// System.out.println("Début onMessage(SuppressionPirate)");
-	// int id = message.getIntProperty("id");
-	// fenetre.suppressionPirate(id);
-	// fenetre.repaint();
-	// }
-	// //SUPPRESSION PIRATES
-	// else if (message.getJMSType().equals("SuppressionPirates")) {
-	// //TODO: remplir => avancer dans un tableau d'ID
-	// }
-	//
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	//
-	// }
 
 	@Override
 	public void notifyDisconnect() {
