@@ -163,16 +163,12 @@ public class Main implements MessageListener, GameObserver {
 	@Override
 	public void onMessage(Message message) {
 		// TODO
-		System.out.println("Début onMessage()");
 		// System.out.println(arg0.toString());
 		// TODO Auto-generated method stub
 		try {
-			System.out.println("Message type : " + message.getJMSType());
-
 			switch (message.getJMSType()) {
 
 			case "map":
-				System.out.println("Début onMessage(MAP)");
 				int mapLength = ((StreamMessage) message).readInt();
 				int[][] map = new int[mapLength][mapLength];
 				for (int i = 0; i < mapLength; i++) {
@@ -185,7 +181,6 @@ public class Main implements MessageListener, GameObserver {
 				break;
 
 			case "YourID":
-				System.out.println("Début onMessage(YOURID)");
 				int id1 = message.getIntProperty("id");
 				if(myId == -1) {
 					myId = id1;
@@ -207,14 +202,12 @@ public class Main implements MessageListener, GameObserver {
 				break;
 
 			case "DeathPirate":
-				System.out.println("Début onMessage(DeathPirate)");
 				int id2 = message.getIntProperty("id");
 				fenetre.mortPirate(id2);
 				fenetre.repaint();
 				break;
 
 			case "Singe":
-				System.out.println("Début onMessage(Singe)");
 				int id3 = message.getIntProperty("id");
 				int x3 = message.getIntProperty("x");
 				int y3 = message.getIntProperty("y");
@@ -223,7 +216,6 @@ public class Main implements MessageListener, GameObserver {
 				break;
 
 			case "Rhum":
-				System.out.println("Début onMessage(Rhum)");
 				int x4 = message.getIntProperty("x");
 				int y4 = message.getIntProperty("y");
 				fenetre.creationRhum(x4, y4, true);
@@ -231,17 +223,14 @@ public class Main implements MessageListener, GameObserver {
 				break;
 
 			case "SuppressionPirate":
-				System.out.println("Début onMessage(SuppressionPirate)");
 				int id5 = message.getIntProperty("id");
 				fenetre.suppressionPirate(id5);
 				fenetre.repaint();
 				break;
 
 			case "Tresor":
-				System.out.println("Début onMessage(Tresor)");
 				int x5 = message.getIntProperty("x");
 				int y5 = message.getIntProperty("y");
-				System.out.println("valeur" + x5 + "valuer2 " + y5);
 				fenetre.creationTresor(x5, y5, false);
 				fenetre.repaint();
 				break;
@@ -254,7 +243,6 @@ public class Main implements MessageListener, GameObserver {
 				for (int i = 0; i < size; i++) {
 					
 					int id = message.getIntProperty("id" + i);
-					System.out.println("GOOOOOOOOOOO i = " + i + " et ID=" + id);
 					int x = message.getIntProperty("x" + i);
 					int y = message.getIntProperty("y" + i);
 					int energy = message.getIntProperty("energy" + i);
@@ -299,7 +287,6 @@ public class Main implements MessageListener, GameObserver {
 
 	@Override
 	public void notifyDisconnect() {
-		System.out.println("NotifyDisconnect");
 		// TODO envoyer un message au serveur avec notre identifiant de pirate (afin que
 		// le serveur le supprime de la partie)
 		this.remoteMi.disconnect(String.valueOf(myId));
@@ -311,7 +298,6 @@ public class Main implements MessageListener, GameObserver {
 
 	@Override
 	public void notifyMove(int arg0, int arg1) {
-		System.out.println();
 		this.remoteMi.move(arg0, arg1, this.myId);		
 	}
 
