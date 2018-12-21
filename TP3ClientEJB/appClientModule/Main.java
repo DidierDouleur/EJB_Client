@@ -192,16 +192,17 @@ public class Main implements MessageListener, GameObserver {
 				}
 				break;
 
-			case "YourPirate":
+			case "Pirate":
 				int id42 = message.getIntProperty("id");
-				if (myId == -1) {
-					myId = id42;
+				String image = "img/Autres_Pirates.jpg";
+				if (myId == id42) {
+					image = "img/Mon_Pirate.png";
 				}
 				int x42 = message.getIntProperty("x");
 				int y42 = message.getIntProperty("y");
 				int energyLevel42 = message.getIntProperty("energy");
 
-				fenetre.ajoutPirate(id42, x42, y42, "img/Mon_Pirate.png", energyLevel42);
+				fenetre.ajoutPirate(id42, x42, y42, image, energyLevel42);
 				fenetre.repaint();
 				break;
 
